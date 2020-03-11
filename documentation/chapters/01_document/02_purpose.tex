@@ -1,3 +1,26 @@
 % Verwendungszweck inkl. Beispiel
 
 \section{Purpose}
+
+\subsection{When should it be used?}
+
+Should be used when: 
+\begin{itemize}
+    \item there's a language to interpret.
+    \begin{itemize}
+        \item Represent statements as AST
+    \end{itemize}
+
+    \item the grammar is simple.
+    \begin{itemize}
+        \item Use parsers for a large class hierarchy.
+        \item Doesn't use an AST. Saves space and time.
+    \end{itemize}
+
+    \item efficiency is not a critical concern.
+    \begin{itemize}
+        \item More efficient when translating the parse tree to another form.
+    \end{itemize}
+\end{itemize}
+
+% Source: https://github.com/iluwatar/java-design-patterns/tree/master/interpreter
