@@ -1,3 +1,188 @@
-\section{Example}
+\chapter{Example}
 
-% TODO: Explain code samples
+This example will cover a calculator that can parse mathematical expressions and print the result. The resulting code for this, can be found in the \textit{examples} folder. 
+
+
+\section{Define the classes}
+
+The first step should be the specify, which nonterminal and terminal symbols are needed. In our case, we have the following symbols: 
+
+\begin{itemize}
+    \item Nonterminal
+    \begin{itemize}
+        \item Plus
+        \item Minus
+        \item Division
+        \item Multiplication
+    \end{itemize}
+
+    \item Terminal
+    \begin{itemize}
+        \item Number
+    \end{itemize}
+\end{itemize}
+
+The nonterminal symbols need, of course, two child nodes. This could for example be a terminal but also nonterminal symbol. With these symbols, we can basically define a simple syntax tree. 
+
+
+
+\section{Implement the classes}
+
+Now that we have defined the classes, we can implement them. As already mentioned in the last chapter, each class derives from an abstract class, that has the \textit{interpret} method. 
+
+\begin{verbatim}
+package expressions;
+
+public abstract class AbstractExpression {
+    public abstract int interpret();
+
+    @Override
+    public abstract String toString();
+}
+\end{verbatim}
+
+You can see that this class also overrides the \textit{toString} method. You'll see later why. The different expressions then derive the \textit{AbstractExpression} class and implement the \textit{interpret} method. This could look like this: 
+
+\subsection{Nonterminal Expressions}
+
+\begin{verbatim}
+package expressions;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+@AllArgsConstructor
+public class MultiplyExpression extends AbstractExpression {
+    private AbstractExpression lhs;
+    private AbstractExpression rhs;
+
+    @Override
+    public int interpret() {
+        return lhs.interpret() * rhs.interpret();
+    }
+
+    @Override
+    public String toString() {
+        return String.format("(%s * %s)", lhs.toString(), rhs.toString());
+    }
+}
+\end{verbatim}
+
+I should probably mention, that I used \textit{Lombok} to automatically generate the getter and setters for me so I don't have to write that much code and keep it simple. The only difference between the different nonterminal symbols is, that they have a different \textit{interpret} method. For example the \textit{PlusExpression} will just use the \textit{+} instead of the \textit{*} operator. As you have seen in the UML diagram, the nonterminal expression forward interprets the terminal expressions that it stores internally. 
+
+You can also see that I implemented the overridden \textit{toString} method, which will later be used to print our custom parse tree. It just takes the left and right side of the mathematical expression and prints it. Just like you would write it on paper. 
+
+\subsection{Terminal Expressions}
+
+This is basically the same as the nonterminal expression above, with the only difference, that it does not have child nodes. It has only a simple number, which cannot be replaced.
+
+\begin{verbatim}
+package expressions;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+@AllArgsConstructor
+public class NumberExpression extends AbstractExpression {
+    private int number;
+
+    public NumberExpression(String s) {
+        this.number = Integer.parseInt(s);
+    }
+
+    @Override
+    public int interpret() {
+        return number;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s", number);
+    }
+}
+\end{verbatim}
+
+
+\section{Define an input format}
+
+I decided to use the \nameref{sec:reverse-polish-notation} as input format. This remove the need of parentheses, which makes parsing the input easier. The input format for our calculator can also be described in the \nameref{sec:backus-naur-form}, which will look like this: 
+
+\begin{verbatim}
+expression  ::= plus | minus | variable | number
+plus        ::= expression expression '+'
+minus       ::= expression expression '-'
+variable    ::= 'a' | 'b' | 'c' | ... | 'z'
+digit       = '0' | '1' | ... | '9'
+number      ::= digit | digit number
+\end{verbatim}
+
+This defines a language that contains \nameref{sec:reverse-polish-notation} like these: 
+
+\begin{verbatim}
+a b +
+a b c + -
+a b + c a - -
+\end{verbatim}
+
+\section{Parse the input}
+
+The input can be parsed, by first splitting the string and then finding the correct expression for the token. Using a stack makes parsing the \nameref{sec:reverse-polish-notation} input really easy. 
+
+\begin{verbatim}
+private static AbstractExpression createAbstractSyntaxTree (String tokenString) {
+    var tokenList = tokenString.split(" ");
+    var stack = new Stack<AbstractExpression>();
+
+    // Iterate though the token list.
+    for (var token : tokenList) {
+        if (isOperator(token)) {
+            var rhs = stack.pop();
+            var lhs = stack.pop();
+
+            var operator = getOperator(token, lhs, rhs);
+
+            stack.push(operator);
+        } else {
+            var number = new NumberExpression(token);
+            stack.push(number);
+        }
+    }
+
+    return stack.pop();
+}
+\end{verbatim}
+
+
+\section{Result}
+
+When you use all the functions, you can add the input string like \textbf{4 3 2 - 1 + *} in this example, generate the \nameref{sec:abstract-syntax-tree} and then either print it or call \textit{interpret}. The \textit{toString} method also forward calls \textit{toString}, thus, if we print it, the entire \nameref{sec:abstract-syntax-tree} will get printed to the console. The output will be \textit{(4 * ((3 - 2) + 1)) = 8} and \textit{((12 * 2) + (64 / 2)) = 56}
+
+\begin{verbatim}
+public static void main(String[] args) {
+    //
+    // Create expression tree from string
+    //
+    var tokenString = "4 3 2 - 1 + *";
+    var result = createAbstractSyntaxTree(tokenString);
+    System.out.println(String.format("%s = %s", 
+        result, result.interpret()));
+
+    //
+    // Create expression tree manually
+    //
+    var customExpression = new PlusExpression(
+            new MultiplyExpression(new NumberExpression(12), 
+                new NumberExpression(2)),
+            new DivideExpression(new NumberExpression(64), 
+                new NumberExpression(2))
+    );
+    System.out.println(String.format("%s = %s", 
+        customExpression, customExpression.interpret()));
+}
+\end{verbatim}

@@ -1,12 +1,37 @@
-% Anwendung in einem Framework
+\chapter {Usages}
 
-\section {Usages}
+\section{Frameworks}
 
-\subsection{Java}
+The interpreter pattern is also sometimes used in big frameworks. 
 
 \begin{itemize}
     \item \href{http://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html}{java.util.Pattern} 
     \item \href{http://docs.oracle.com/javase/8/docs/api/java/text/Normalizer.html}{java.text.Normalizer} 
     \item \href{http://docs.oracle.com/javaee/7/api/javax/el/ELResolver.html}{javax.el.ELResolver} 
     \item All subclasses of \href{http://docs.oracle.com/javase/8/docs/api/java/text/Format.html}{java.text.Format}
+    \item \href{https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#expressions}{Spring Expression Language (SpEL)}
+    \begin{itemize}
+        \item  The developers of the Spring Framework used the Interpreter Pattern when they added the feature of SpEL. This is an ideal use case for the Interpreter Pattern.
+        \item For example there's a \textit{ExpressionParser} which is an interface that parses expression strings into compiled expressions that can be evaluated. This implementation is responsible for parsing an input and returning instances of \textit{Expression}.
+        \item These are some expressions: \textit{CompositeStringExpression}, \textit{LiteralExpression}, \textit{SpelExpression}
+        \item Spring also provides the \textit{EvaluationContext} interface, with the implementations \textit{MethodBasedEvaluationContext} and \textit{StandardEvaluationContext} classes to represent the context component of the Interpreter pattern.
+    \end{itemize}
+\end{itemize}
+
+% https://springframework.guru/gang-of-four-design-patterns/interpreter-pattern/
+
+\section{General}
+
+The interpreter pattern can generally be used for a lot of things. Like already noted in section \ref{sec:when-to-use}, it can be used for the following: 
+
+\begin{itemize}
+    \item Code Formatters
+    \item Extensions for IDEs
+    \item Database query languages (e.g. SQL)
+
+    \begin{itemize}
+        \item Here's an example, where the interpreter pattern was used to implement a simple SQL-like language: \href{https://github.com/eugenp/tutorials/tree/master/patterns/design-patterns-behavioral}{Baeldung - Java Interpreter Pattern}
+    \end{itemize}
+
+    \item Computer languages
 \end{itemize}

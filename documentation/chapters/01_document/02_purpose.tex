@@ -1,25 +1,24 @@
-% Verwendungszweck inkl. Beispiel
+\chapter{Purpose}
 
-\section{Purpose}
+\section{When should it be used?}
+\label{sec:when-to-use}
 
-\subsection{When should it be used?}
-
-Should be used when: 
+You should not use the interpreter pattern for every problem. It has, like the other design patterns, its use cases. However, you should always use it when:  
 \begin{itemize}
-    \item there's a language to interpret.
-    \begin{itemize}
-        \item Represent statements as AST
-    \end{itemize}
+    \item there's a language to interpret and you can represent the statements as an AST.
 
     \item the grammar is simple.
     \begin{itemize}
-        \item Use parsers for a large class hierarchy.
-        \item Doesn't use an AST. Saves space and time.
+        \item In large projects, the class hierarchy becomes large and unmaintainable. 
+        \item Parser are a great alternative in such cases.
+        \item They don't use an AST, which can save space and possibly time.
     \end{itemize}
 
     \item efficiency is not a critical concern.
     \begin{itemize}
-        \item More efficient when translating the parse tree to another form.
+        \item It's usually more efficient, when translating the parse tree to another form.
+        \item For example, regular expressions are often transformed into state machines. 
+        \item The interpreter pattern could there still be used to translate it. 
     \end{itemize}
 \end{itemize}
 

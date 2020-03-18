@@ -8,7 +8,7 @@ public class Main {
         // Create expression tree from string
         //
         var tokenString = "4 3 2 - 1 + *";
-        var result = createExpressionTree(tokenString);
+        var result = createAbstractSyntaxTree(tokenString);
         System.out.println(String.format("%s = %s", result, result.interpret()));
 
         //
@@ -21,7 +21,7 @@ public class Main {
         System.out.println(String.format("%s = %s", customExpression, customExpression.interpret()));
     }
 
-    private static AbstractExpression createExpressionTree (String tokenString) {
+    private static AbstractExpression createAbstractSyntaxTree(String tokenString) {
         var tokenList = tokenString.split(" ");
         var stack = new Stack<AbstractExpression>();
 

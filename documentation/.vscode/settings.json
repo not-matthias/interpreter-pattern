@@ -1,4 +1,5 @@
 {
+    "editor.wordWrap": "on",
     "files.exclude": {
         "**/*.aux": true,
         "**/*.lof": true,
@@ -143,5 +144,8 @@
         "**/*-tags.tex": true,
         "**/*.sta": true,
         "**/*.lpz": true
-    }
+    },
+    "cSpell.words": [
+        "Nonterminal"
+    ]
 }
