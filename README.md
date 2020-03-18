@@ -1,2 +1,2 @@
-# interpreter-pattern
-Presentation about the interpreter design pattern.
+# Interpreter Pattern
+Writeup about the interpreter design pattern.
